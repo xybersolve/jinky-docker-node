@@ -1,0 +1,7 @@
+.git
+.gitignore
+docker-compose.yaml
+node_modules
+README.md
+LICENSE.md
+Makefile
