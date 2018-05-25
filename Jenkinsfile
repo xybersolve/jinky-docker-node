@@ -1,10 +1,14 @@
 pipeline {
   agent none
+  options {
+    timeout(time: 5, unit: 'MINUTES')
+  }
   stages {
     stage('Use Dockerfile') {
-      agent { dockerfile true }
-      dockerfile {
-        filename 'Dockerfile.alpine.node'
+      agent {
+        dockerfile {
+          filename 'Dockerfile.alpine.node'
+        }
       }
       steps {
         sh 'node --version'
@@ -15,7 +19,7 @@ pipeline {
 
     stage('Java Backend') {
       agent {
-        docker { 
+        docker {
           image 'maven:3-alpine'
         }
       }
@@ -35,6 +39,23 @@ pipeline {
       }
       steps {
         sh 'node --version'
+      }
+    }
+    stage('Deploy') {
+      when {
+        branch 'development'
+        anyOf {
+            environment name: 'DEPLOY_TO', value: 'development'
+            environment name: 'DEPLOY_TO', value: 'staging'
+        }
+      }
+      agent {
+        docker {
+          image 'busybox:latest'
+        }
+      }
+      steps {
+        sh "echo Starting Deployment..."
       }
     }
   }
