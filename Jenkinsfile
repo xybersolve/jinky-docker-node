@@ -15,7 +15,9 @@ pipeline {
 
     stage('Java Backend') {
       agent {
-        docker { image 'maven:3-alpine' }
+        docker { 
+          image 'maven:3-alpine'
+        }
       }
       steps {
         sh 'mvn --version'
@@ -23,8 +25,13 @@ pipeline {
     }
 
     stage('Node Frontend') {
+      when {
+        branch 'master'
+      }
       agent {
-        docker { image 'node:7-alpine' }
+        docker {
+          image 'node:9.11.1-alpine'
+        }
       }
       steps {
         sh 'node --version'
