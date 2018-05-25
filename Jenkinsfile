@@ -3,6 +3,9 @@ pipeline {
   stages {
     stage('Use Dockerfile') {
       agent { dockerfile true }
+      dockerfile {
+        filename 'Dockerfile.alpine.node'
+      }
       steps {
         sh 'node --version'
         sh 'git --version'
@@ -23,7 +26,6 @@ pipeline {
       agent {
         docker { image 'node:7-alpine' }
       }
-
       steps {
         sh 'node --version'
       }
